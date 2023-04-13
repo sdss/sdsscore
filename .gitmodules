@@ -1,3 +1,6 @@
 [submodule "apo/summary_files/000XXX"]
 	path = apo/summary_files/000XXX
 	url = git@github.com:sdss/sdsscore_apo_summary_files_000XXX
+[submodule "apo/summary_files/001XXX"]
+	path = apo/summary_files/001XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_001XXX
