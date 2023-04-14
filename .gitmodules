@@ -4,3 +4,42 @@
 [submodule "apo/summary_files/001XXX"]
 	path = apo/summary_files/001XXX
 	url = git@github.com:sdss/sdsscore_apo_summary_files_001XXX
+[submodule "apo/summary_files/002XXX"]
+	path = apo/summary_files/002XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_002XXX
+[submodule "apo/summary_files/003XXX"]
+	path = apo/summary_files/003XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_003XXX
+[submodule "apo/summary_files/004XXX"]
+	path = apo/summary_files/004XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_004XXX
+[submodule "apo/summary_files/005XXX"]
+	path = apo/summary_files/005XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_005XXX
+[submodule "apo/summary_files/006XXX"]
+	path = apo/summary_files/006XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_006XXX
+[submodule "apo/summary_files/007XXX"]
+	path = apo/summary_files/007XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_007XXX
+[submodule "apo/summary_files/008XXX"]
+	path = apo/summary_files/008XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_008XXX
+[submodule "apo/summary_files/009XXX"]
+	path = apo/summary_files/009XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_009XXX
+[submodule "lco/summary_files/10000XXX"]
+	path = lco/summary_files/10000XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10000XXX
+[submodule "lco/summary_files/10001XXX"]
+	path = lco/summary_files/10001XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10001XXX
+[submodule "lco/summary_files/10002XXX"]
+	path = lco/summary_files/10002XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10002XXX
+[submodule "lco/summary_files/10003XXX"]
+	path = lco/summary_files/10003XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10003XXX
+[submodule "apo/summary_files/010XXX"]
+	path = apo/summary_files/010XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_010XXX
