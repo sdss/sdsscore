@@ -1,0 +1,21 @@
+#%yanny
+#
+# sdHdrFix-60007.par
+#
+# Created by pydl.pydlutils.yanny.yanny
+#
+# 2023-03-06 22:27:46 UTC
+#
+MJD 60007
+OBS LCO
+
+typedef struct {
+    char fileroot[20];
+    char keyword[9];
+    char value[80];
+} OPHDRFIX;
+
+OPHDRFIX sdR-??-00009510 HEAR "1 1 1 1"
+OPHDRFIX sdR-??-00009510 NE "1 1 1 1"
+OPHDRFIX sdR-??-00009515 HEAR "1 1 1 1"
+OPHDRFIX sdR-??-00009515 NE "1 1 1 1"

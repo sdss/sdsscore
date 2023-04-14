@@ -1,0 +1,244 @@
+#!/usr/bin/env python
+
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+
+# Process guide camera images into a single roll-up file with statistics.
+
+import numpy as np
+import os
+from astropy.io import fits
+import astropy.time as time
+import re
+import argparse
+import pdb
+
+from pydl.pydlutils.yanny import yanny
+import yaml
+from astropy.table import Table
+import esutil
+
+
+def getconfig(config_id=None,plugid=None,specid=1) :
+    """ read confSummary or plPlugMap file, return data
+    """
+    if config_id is not None :
+        plug,header=config(config_id,specid=specid,useconfF=True,useparent=False)
+        sky=np.where(plug['category'] == b'sky_boss')[0]
+        stan=np.where(np.char.find(plug['category'].astype(str),'standard') >= 0)[0]
+        if specid == 1 :
+            # substitude GAIA transformed mags for gri for gaia_g < 15
+            x = plug['bp_mag']-plug['rp_mag']
+            x2 = x * x
+            x3 = x * x * x
+            gaia_G = plug['gaia_g_mag']
+            j = np.where(gaia_G < 15)[0]
+            plug['mag'][j,1] = -1 * (0.13518 - 0.46245 * x[j] - 0.25171 * x2[j] + 0.021349 * x3[j]) + gaia_G[j]
+            plug['mag'][j,2] = -1 * (-0.12879 + 0.24662 * x[j] - 0.027464 * x2[j] - 0.049465 * x3[j]) + gaia_G[j]
+            plug['mag'][j,3] = -1 * (-0.29676 + 0.64728 * x[j] - 0.10141 * x2[j]) + gaia_G[j]
+    elif plugid is not None :
+        plug,header=config(os.environ['MAPPER_DATA_N']+'/'+plugid.split('-')[1]+'/plPlugMapM-'+plugid+'.par',specid=specid,struct='PLUGMAPOBJ')
+        sky=np.where(plug['objType'] == b'SKY')[0]
+        stan=np.where(np.char.find(plug['objType'].astype(str),'STD') >= 0)[0]
+        plug=Table(plug)
+        plug['h_mag']=np.nan
+
+        # get plateHoles file
+        plate=int(plugid.split('-')[0])
+        # substitute H mag from plateHoles
+        holes=yanny('{:s}/plates/{:04d}XX/{:06d}/plateHolesSorted-{:06d}.par'.format(
+                  os.environ['PLATELIST_DIR'],plate//100,plate,plate))
+        h=esutil.htm.HTM()
+        m1,m2,rad=h.match(plug['ra'],plug['dec'],
+                  holes['STRUCT1']['target_ra'],holes['STRUCT1']['target_dec'],
+                  0.1/3600.,maxmatch=500)
+        if specid == 1 :
+            if int(header['plateId']) >= 15000 :
+                corr = fits.open(
+                         os.environ['IDLSPEC2D_DIR']+'/catfiles/Corrected_values_plate{:s}_design{:s}.fits'.format(
+                         header['plateId'],header['designid']))[1].data
+                h1,h2,rad=h.match(plug['ra'][m1],plug['dec'][m1], corr['RA'],corr['DEC'],
+                          0.1/3600.,maxmatch=500)
+                bd=np.where(holes['STRUCT1']['catalogid'][m2[h1]] == np.array(corr['Original_CatalogID'],dtype=np.int64)[h2])[0]
+                j=np.where(corr[h2[bd]]['Mag_Change'])[0]
+                print(plugid,len(bd),len(j))
+                plug['mag'][m1[h1[bd]],1] = corr['gmag'][h2[bd]]
+                plug['mag'][m1[h1[bd]],2] = corr['rmag'][h2[bd]]
+                plug['mag'][m1[h1[bd]],3] = corr['imag'][h2[bd]]
+                plug['mag'][m1[h1[bd]],4] = corr['zmag'][h2[bd]]
+        elif specid == 2 :
+            plug['h_mag'][m1] = holes['STRUCT1']['tmass_h'][m2]
+    else :
+        raise ValueError('either config_id or plugid needs to be set')
+
+    return np.array(plug),header,sky,stan
+
+def config(cid,specid=2,struct='FIBERMAP',useparent=True,useconfF=False) :
+    """ Get FIBERMAP structure from configuration file for specified instrument
+           including getting parent_configuration if needed (for scrambled configurations)
+    """
+    if useconfF : confname='confSummaryF'
+    else :confname='confSummary'
+    if isinstance(cid,str):
+        conf = yanny(cid)
+    else :
+        conf = yanny(os.environ['SDSSCORE_DIR']+'/apo/summary_files/{:04d}XX/{:s}-{:d}.par'.format(cid//100,confname,cid))
+        if useparent :
+            try :
+                parent = int(conf['parent_configuration'])
+                if parent > 0 :
+                    conf = yanny(os.environ['SDSSCORE_DIR']+'/apo/summary_files/{:04d}XX/{:s}-{:d}.par'.format(parent//100,confname,parent))
+            except :  pass
+
+    if conf == None or len(conf) == 0 :
+        raise FileNotFoundError('error opening file',cid)
+
+    gd =np.where((conf[struct]['spectrographId'] == specid) & (conf[struct]['fiberId'] > 0) )[0]
+    return conf[struct][gd],conf.new_dict_from_pairs()
+
+
+def gproc(mjd=None, observatory=None, outfile=None):
+    """Process an MJD of processed guide camera files into a single file
+
+    Parameters:
+    -----------
+
+    mjd : integer
+      MJD (days) of observation
+    observatory : str
+      which observatory ('apo' or 'lco')
+
+    Comments:
+    --------
+
+    Writes gcam-[mjd].fits in local directory with binary table containing
+    a row for each guider image.
+
+    Note that 'date-obs' from each guider image header is translated into
+    a floating point 'mjd'.
+    """
+
+    if observatory == None :
+        gdir = os.path.join('/data/gcam',str(mjd))
+    elif observatory == 'apo':
+        gdir = os.path.join(os.getenv('GCAM_DATA_N'), str(mjd))
+    else:
+        gdir = os.path.join(os.getenv('GCAM_DATA_S'), str(mjd))
+
+    files = os.listdir(gdir)
+    gcam0_dtype = [('gdrms', np.dtype(np.float32)),
+                   ('seeing', np.dtype(np.float32)),
+                   ('fwhm_median', np.dtype(np.float32)),
+                   ('fwhm_mean', np.dtype(np.float32)),
+                   ('indx', np.dtype(np.int32)),
+                   ('date-obs', np.dtype(np.str_), 21),
+                   ('mjd', np.dtype(np.float64)),
+                   ('ra', np.dtype(np.float64), 17),
+                   ('dec', np.dtype(np.float64), 17),
+                   ('xFocal', np.dtype(np.float32), 17),
+                   ('yFocal', np.dtype(np.float32), 17),
+                   ('focusOffset', np.dtype(np.float32), 17),
+                   ('xstar', np.dtype(np.float32), 17),
+                   ('ystar', np.dtype(np.float32), 17),
+                   ('xCenter', np.dtype(np.float32), 17),
+                   ('yCenter', np.dtype(np.float32), 17),
+                   ('dx', np.dtype(np.float32), 17),
+                   ('dy', np.dtype(np.float32), 17),
+                   ('dRA', np.dtype(np.float32), 17),
+                   ('dDec', np.dtype(np.float32), 17),
+                   ('fwhm', np.dtype(np.float32), 17),
+                   ('flux', np.dtype(np.float32), 17),
+                   ('mag', np.dtype(np.float32), 17),
+                   ('sky', np.dtype(np.float32), 17),
+                   ('skymag', np.dtype(np.float32), 17)]
+                   
+    count = 0
+    for file in sorted(files):
+        if(file.startswith('proc-')):
+            count = count + 1
+    gcam = np.zeros(count, dtype=gcam0_dtype)
+
+    count = 0
+    oldname = ''
+    for file in sorted(files):
+        print(file,len(files))
+        if(file.startswith('proc-')):
+            indx_search = re.search("proc-gimg-([0-9]{4}).fits", file)
+            indx = np.int32(indx_search.group(1))
+            #header = fitsio.read_header(os.path.join(gdir, file), ext=0)
+            hdulist = fits.open(os.path.join(gdir, file))
+            header = hdulist[0].header
+
+            if('object' in header['IMAGETYP']):
+                gcam['indx'][count] = indx
+                try:
+                    rescale = (3600. / np.float32(header['PLATSCAL']))
+                except:
+                    rescale = 0.
+                data = hdulist[6].data
+                ii = np.nonzero((data['enabled'] == True) &
+                                (data['gprobebits'] == 0) &
+                                (data['dx'] == data['dx']))[0]
+                if len(ii) > 0 :
+                    soff = (data['dx'][ii]**2 + data['dy'][ii]**2)
+                    rms = np.sqrt(soff.mean())
+                    gcam['gdrms'][count] = rms * rescale
+                ii = np.nonzero((data['enabled'] == True) &
+                                (data['gprobebits'] == 0) &
+                                (data['focusOffset'] == 0.) &
+                                (data['fwhm'] == data['fwhm']))[0]
+                if len(ii) > 0 :
+                    fwhm_median = np.median(data['fwhm'][ii])
+                    if (fwhm_median == fwhm_median):
+                        gcam['fwhm_median'][count] = fwhm_median
+                    fwhm_mean = np.mean(data['fwhm'][ii])
+                    if (fwhm_mean == fwhm_mean):
+                        gcam['fwhm_mean'][count] = fwhm_mean
+                for (name, indx) in zip(gcam.dtype.names,
+                                        range(len(gcam.dtype.names))):
+                    if (indx >= 7):
+                        try:
+                            gcam[name][count] = data[name]
+                        except ValueError:
+                            pass
+                        except KeyError:
+                            pass
+                gcam['seeing'][count] = np.float32(header['SEEING'])
+                try: dt = str(header['DATE-OBS'].decode())
+                except: dt = header['DATE-OBS']
+                gcam['date-obs'][count] = dt
+                tt = time.Time(dt)
+                tt.format = 'mjd'
+                gcam['mjd'][count] = tt.value
+
+                if header['NAME'] != oldname :
+                    plug,plugheader,sky,stan = getconfig(plugid=header['NAME'],specid=0)
+                    guide = np.where(plug['holeType'] == b'GUIDE')[0]
+                    oldname = header['NAME']
+                gcam['ra'][count,plug['fiberId'][guide]-1] = plug['ra'][guide]
+                gcam['dec'][count,plug['fiberId'][guide]-1] = plug['dec'][guide]
+
+                count = count + 1
+
+    gcam = gcam[0:count - 1]
+    if outfile is None: 
+        outfile='gcam-{mjd}.fits'.format(mjd=mjd)
+    fits.writeto(outfile, gcam, overwrite=True)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Process guide images into one file",
+                                     usage="gcam_process --mjd 12345 --observatory apo")
+    parser.add_argument("-m", "--mjd", type=np.int32,
+                        required=True, help="MJD to process")
+    parser.add_argument("--observatory", type=str,
+                        required=True,
+                        help="observatory to process",
+                        choices=['apo', 'lco'])
+    parser.add_argument("-o", "--output", type=str,
+                        required=False, help="output file name")
+    args = parser.parse_args()
+    gproc(mjd=args.mjd, observatory=args.observatory, outfile=args.output) 
+
+

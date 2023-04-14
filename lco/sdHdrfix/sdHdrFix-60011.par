@@ -1,0 +1,21 @@
+#%yanny
+#
+# sdHdrFix-60011.par
+#
+# Created by pydl.pydlutils.yanny.yanny
+#
+# 2023-03-08 15:26:34 UTC
+#
+MJD 60011
+OBS LCO
+
+typedef struct {
+    char fileroot[20];
+    char keyword[9];
+    char value[80];
+} OPHDRFIX;
+
+OPHDRFIX sdR-??-00009697 FF "0 0 0 0"
+OPHDRFIX sdR-??-00009698 FF "0 0 0 0"
+OPHDRFIX sdR-??-00009699 FF "0 0 0 0"
+OPHDRFIX sdR-??-00009700 FF "0 0 0 0"

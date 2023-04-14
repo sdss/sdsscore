@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+
+import glob
+import os
+import time
+from astropy.time import Time
+
+def clean(observatory,mindays=60,maxdays=90) :
+    """ Generate cleaning scripts for APOGEE files at APO/LCO
+    """
+    # get todays MJD for naming output files
+    #mjd_run=str(int(Time.now().mjd))
+
+    # open output script files
+    f_raw=open('{:s}_clean_raw'.format(observatory),'w')
+    os.chmod('{:s}_clean_raw'.format(observatory),0o755)
+    f_archive=open('{:s}_clean_archive'.format(observatory),'w')
+    os.chmod('{:s}_clean_archive'.format(observatory),0o755)
+    f_ics=open('{:s}_clean_ics'.format(observatory),'w')
+    os.chmod('{:s}_clean_ics'.format(observatory),0o755)
+
+    # get current time
+    now=time.time()
+
+    # loop over all data directories
+    if observatory == 'apo' :
+        dirs=glob.glob(os.environ['APOGEE_DATA_N']+'/*')
+        prefix = 'apR'
+    elif observatory == 'apo1m' :
+        dirs=glob.glob(os.environ['APOGEE_DATA_1M']+'/*')
+        prefix = 'apR'
+    elif observatory == 'lco' :
+        dirs=glob.glob(os.environ['APOGEE_DATA_S']+'/*')
+        prefix = 'asR'
+    chips=['a','b','c']
+    for dir in dirs :
+      mjd=os.path.basename(dir)
+      dt=now-os.path.getmtime(dir)
+      # consider directorires more than mindays days old and less than maxdays
+      if dt > mindays*86400. and dt < maxdays*86400 :
+        print('checking ',mjd)
+
+        # get the apR*.apz files, and accumulate exposure numbers
+        files=glob.glob(dir+'/'+prefix+'*apz')
+        nums=[]
+        for file in sorted(files) :
+          num=os.path.basename(file).split('.')[0].split('-')[2]
+          nums.append(num)
+
+
+        # for each exposure number, check for existence of bundled frames in all 3 chips
+        for num in set(nums) :
+          rm = True
+          for chip in chips :
+            if not os.path.exists(dir+'/'+prefix+'-'+chip+'-'+num+'.apz')  : rm = False
+
+          # if all 3 chips exist, write cleaning lines
+          if rm :
+            for chip in chips :
+                f_archive.write('rm /data/apogee/archive/{:s}/{:s}-{:s}-{:s}.apz\n'.format(mjd,prefix,chip,num))
+            f_raw.write('rm /data/apogee/raw/{:s}/{:s}aw-{:s}-???.fits\n'.format(mjd,prefix,num))
+            f_ics.write('rm /data/{:s}/{:s}aw-{:s}-???.fits\n'.format(num[0:4],prefix,num))
+            f_ics.write('rm /summary/{:s}/{:s}aw-{:s}.fits\n'.format(num[0:4],prefix,num))
+
+    f_archive.close()
+    f_raw.close()
+    f_ics.close()
+
+if __name__ == "__main__" :
+
+    print('apo')
+    clean('apo')
+    clean('lco',mindays=45)

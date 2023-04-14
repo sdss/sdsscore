@@ -1,0 +1,166 @@
+#!/usr/bin/env python
+
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+
+# Process guide camera images into a single roll-up file with statistics.
+
+import glob
+import numpy as np
+import os
+from astropy.io import fits
+import astropy.time as time
+import re
+import argparse
+import pdb
+from tools import plots
+
+def gproc(mjd=None, observatory=None, outfile=None, plot=False, clobber=False):
+    """Process an MJD of processed guide camera files into a single file
+
+    Parameters:
+    -----------
+
+    mjd : integer
+      MJD (days) of observation
+    instrument : str
+      which instrument ('apogee-s' or 'apogee-n')
+
+    Comments:
+    --------
+
+    Writes gcam-[mjd].fits in local directory with binary table containing
+    a row for each guider image.
+
+    Note that 'date-obs' from each guider image header is translated into
+    a floating point 'mjd'.
+    """
+
+    if mjd == None :
+        mjd = int(time.Time.now().mjd)
+
+    if observatory == None :
+        gdir = os.path.join('/data/gcam',str(mjd))
+    elif observatory == 'apo':
+        gdir = os.path.join(os.getenv('GCAM_DATA_N'), str(mjd))
+    else:
+        gdir = os.path.join(os.getenv('GCAM_DATA_S'), str(mjd))
+
+    if outfile is None: 
+        outfile=gdir+'/gcam-{mjd}.fits'.format(mjd=mjd)
+
+    if not clobber and os.path.exists(outfile) : 
+        return
+
+    files = glob.glob(gdir+'/proc*')
+    gcam0_dtype = [('gdrms', np.dtype(np.float32)),
+                   ('fwhm', np.dtype(np.float32)),
+                   ('date-obs', np.dtype(np.str_), 21),
+                   ('mjd', np.dtype(np.float64)),
+                   ('indx', np.dtype(np.int32)),
+                   ('ra', np.dtype(np.float64), 6),
+                   ('dec', np.dtype(np.float64), 6),
+                   ('dRA', np.dtype(np.float32), 6),
+                   ('dDec', np.dtype(np.float32), 6),
+                   ('dRot', np.dtype(np.float32), 6),
+                   ('dScale', np.dtype(np.float32), 6),
+                   ('corrRA', np.dtype(np.float32), 6),
+                   ('corrDec', np.dtype(np.float32), 6),
+                   ('corrRot', np.dtype(np.float32), 6),
+                   ('corrScale', np.dtype(np.float32), 6)
+                   ]
+    
+    ids=[]
+    for file in files :
+        indx_search = re.search(".proc-gimg-gfa..-([0-9]{4}).fits", file)
+        ids.append(indx_search.group(1))
+
+    indexes = sorted(set(ids))
+
+    gcam0_dtype = [
+                   ('indx', np.dtype(np.int32)),
+                   ('date-obs', np.dtype(np.str_), 21),
+                   ('mjd', np.dtype(np.float64)),
+                   ('ra', np.dtype(np.float64)),
+                   ('dec', np.dtype(np.float64)),
+                   ('gdrms', np.dtype(np.float32)),
+                   ('dRA', np.dtype(np.float32)),
+                   ('dDec', np.dtype(np.float32)),
+                   ('dRot', np.dtype(np.float32)),
+                   ('dScale', np.dtype(np.float32)),
+                   ('corrRA', np.dtype(np.float32)),
+                   ('corrDec', np.dtype(np.float32)),
+                   ('corrRot', np.dtype(np.float32)),
+                   ('corrScale', np.dtype(np.float32)),
+                   ('nstars', np.dtype(np.int32), 6),
+                   ('fwhm', np.dtype(np.float32), 6)
+                   ]
+    gcam = np.zeros(len(indexes), dtype=gcam0_dtype)
+    print(mjd,len(indexes))
+    count = 0
+    suffix = 's'
+    for cam in range(6) :
+        if os.path.exists('{:s}/proc-gimg-gfa{:d}n-{:04d}.fits'.format(gdir,cam+1,int(indexes[0]))) : suffix='n'
+    for index in indexes :
+        for cam in range(6) :
+          if os.path.exists('{:s}/proc-gimg-gfa{:d}{:s}-{:04d}.fits'.format(gdir,cam+1,suffix,int(index))) :
+            hdulist = fits.open('{:s}/proc-gimg-gfa{:d}{:s}-{:04d}.fits'.format(gdir,cam+1,suffix,int(index)))
+            header = hdulist[1].header
+            data = hdulist[2].data
+            gcam['indx'][count] = int(index)
+            try: dt = str(header['DATE-OBS'].decode())
+            except: dt = header['DATE-OBS']
+            tt = time.Time(dt)
+            try :
+                gcam['date-obs'][count] = dt
+                gcam['mjd'][count] = tt.mjd
+                gcam['gdrms'][count] = header['rms']
+                gcam['ra'][count] = header['RA']
+                gcam['dec'][count] = header['DEC']
+                gcam['dRA'][count] = header['DELTARA']
+                gcam['dDec'][count] = header['DELTADEC']
+                gcam['dRot'][count] = header['DELTAROT']
+                gcam['dScale'][count] = header['DELTASCL']
+                gcam['corrRA'][count] = header['CORR_RA']
+                gcam['corrDec'][count] = header['CORR_DEC']
+                gcam['corrRot'][count] = header['CORR_ROT']
+                gcam['corrScale'][count] = header['CORR_SCL']
+                gcam['fwhm'][count][cam] = header['fwhm']
+                gcam['nstars'][count][cam] = len(data)
+            except: pass
+        count += 1
+
+    gcam = gcam[0:count - 1]
+    fits.writeto(outfile, gcam, overwrite=True)
+
+    if plot :
+        fig,ax=plots.multi(3,2,figsize=(12,8))
+        plots.plotc(ax[0,0],gcam['mjd'],gcam['gdrms'],np.median(gcam['fwhm'],axis=1),yr=[0,2],xt='MJD',yt='gdrms')
+        for i in range(6) : plots.plotp(ax[0,1],gcam['mjd'],gcam['fwhm'][:,i],label='Camera {:d}'.format(i+1),color=None,xt='MJD',yt='fwhm',yr=[0,5])
+        ax[0,1].legend(fontsize='xx-small')
+        plots.plotc(ax[1,0],gcam['mjd'],gcam['dRA'],np.median(gcam['fwhm'],axis=1),yr=[0,2],xt='MJD',yt='dRA')
+        plots.plotc(ax[1,1],gcam['mjd'],gcam['dDec'],np.median(gcam['fwhm'],axis=1),yr=[0,2],xt='MJD',yt='dDec')
+        plots.plotc(ax[1,2],gcam['mjd'],gcam['dScale'],np.median(gcam['fwhm'],axis=1),yr=[0.9995,1.0005],xt='MJD',yt='dScale')
+        ax[1,2].get_yaxis().get_major_formatter().set_useOffset(False)
+        fig.tight_layout()
+        fig.savefig(outfile.replace('.fits','.png'))
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Process guide images into one file",
+                                     usage="gcam_process [--mjd 12345] [--observatory apo|lco]")
+    parser.add_argument("-m", "--mjd", type=np.int32,
+                        required=False, help="MJD to process")
+    parser.add_argument("--observatory", type=str,
+                        required=False,
+                        help="observatory",
+                        choices=['apo', 'lco'])
+    parser.add_argument("-p","--plot", action="store_true",
+                        required=False, help="make plot")
+    parser.add_argument("-o","--output", type=str,
+                        required=False, help="output file name")
+    parser.add_argument("-c","--clobber", action="store_true",
+                        required=False, help="clobber existing file")
+    args = parser.parse_args()
+    gproc(mjd=args.mjd, observatory=args.observatory, outfile=args.output, plot=args.plot, clobber=args.clobber) 
