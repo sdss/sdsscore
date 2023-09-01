@@ -43,3 +43,9 @@
 [submodule "apo/summary_files/010XXX"]
 	path = apo/summary_files/010XXX
 	url = git@github.com:sdss/sdsscore_apo_summary_files_010XXX
+[submodule "lco/summary_files/10005XXX"]
+	path = lco/summary_files/10005XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10005XXX.git
+[submodule "lco/summary_files/10004XXX"]
+	path = lco/summary_files/10004XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10004XXX.git
