@@ -1,0 +1,18 @@
+#%yanny
+#
+# sdHdrFix-60193.par
+#
+# Created by pydl.pydlutils.yanny.yanny
+#
+# 2023-09-06 14:17:56 UTC
+#
+MJD 60193   # Modified Julian Date for sdHdrFix file
+OBS LCO     # Observatory
+
+typedef struct {
+    char fileroot[20];
+    char keyword[9];
+    char value[80];
+} OPHDRFIX;
+
+OPHDRFIX sdR-??-00020210 HEAR "1 1 1 1"
