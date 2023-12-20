@@ -105,11 +105,11 @@ def getcal(sensor, value, obs = 'apo') :
         cal = (value-0.588)/0.02352 
 
       elif "TPG261-Vacuum" in sensor :
-        quantity = 'vac261'
+        quantity = 'TPG'
         cal = value
 
       elif "VacPressure" in sensor :
-        quantity = 'vacMKD'
+        quantity = 'MKS'
         cal = value
 
       elif "CCPressure" in sensor :
@@ -254,8 +254,8 @@ def mkhtml(obs='apo',outfile=None,skip=1) :
         names = ['ln2','Camera','ColdPlate','Vacuum']
         categories = [['ln2'],['CamFwd','CamMid','CamAft','DetA','DetB','DetC','Coll'],['CPMid','CPHang','CPCorner','VPH','Tent','RadE'],['TPG','MKS','MKS_CC']]
     else :
-        names = ['ln2','Cam','Vacuum','CP','Det']
-        categories = [['ln2'],['CamFwd','CamMid','CamAft'],['Vac261','MKS','MKS_CC'],['CPM','CPH','CPC'],['DetT']]
+        names = ['ln2','Cam','Vacuum','ColdPlate']
+        categories = [['ln2'],['CamFwd','CamMid','CamAft','DetT'],['TPG','MKS','MKS_CC'],['CPMid','CPHang','CPCcorner']]
 
     # open database session
     d=database.DBSession()
