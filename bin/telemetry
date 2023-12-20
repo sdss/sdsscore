@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+import argparse
+from sdsscore import telemetry
+
+# command line driver
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Load APOGEE telemetry",
+                                     usage="telemetry [--load file] [--html filename] [--observatory apo|lco] [--skip nskip]")
+    parser.add_argument("--load", type=str, help="file to load to database",default=None)
+    parser.add_argument("--html", type=str,required=False,default=None)
+    parser.add_argument("--skip", type=int,required=False)
+    parser.add_argument("-d", "--dir", type=str,required=False,
+                        default='/uufs/chpc.utah.edu/common/home/sdss50/sdsswork/mwm/apogee/telemetry')
+    parser.add_argument("-o", "--observatory", type=str,
+                        required=True,
+                        help="observatory",
+                        choices=['apo', 'lco', 'APO','LCO'])
+
+    args = parser.parse_args()
+
+    if args.load is not None :
+        ret=telemetry.load(args.load,obs=args.observatory,dir=args.dir)
+    if args.html is not None :
+        telemetry.mkhtml(obs=args.observatory,outfile=args.html,skip=args.skip)
+
+
