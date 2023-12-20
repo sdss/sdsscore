@@ -199,7 +199,7 @@ def getcal(sensor, value, obs = 'apo') :
         cal = (0.4312375198-value)*453.7772908+78
 
       elif "3424-04" in sensor :
-        quantity = 'CPM'
+        quantity = 'CPMid'
         cal = (0.4310049009-value)*453.3089586+78
 
       elif "3424-05" in sensor :
@@ -211,11 +211,11 @@ def getcal(sensor, value, obs = 'apo') :
         cal = (0.4310591901-value)*453.6686918+78
 
       elif "3424-08" in sensor :
-        quantity = 'CPH'
+        quantity = 'CPHang'
         cal = (0.4309846833-value)*453.4413494+78
 
       elif "3424-09" in sensor :
-        quantity = 'CPC'
+        quantity = 'CPCorner'
         cal = (0.4309548678-value)*453.4724764+78
 
       elif "AUX3424-0" in sensor :
@@ -255,7 +255,7 @@ def mkhtml(obs='apo',outfile=None,skip=1) :
         categories = [['ln2'],['CamFwd','CamMid','CamAft','DetA','DetB','DetC','Coll'],['CPMid','CPHang','CPCorner','VPH','Tent','RadE'],['TPG','MKS','MKS_CC']]
     else :
         names = ['ln2','Cam','Vacuum','ColdPlate']
-        categories = [['ln2'],['CamFwd','CamMid','CamAft','DetT'],['TPG','MKS','MKS_CC'],['CPMid','CPHang','CPCcorner']]
+        categories = [['ln2'],['CamFwd','CamMid','CamAft','DetT'],['TPG','MKS','MKS_CC'],['CPMid','CPHang','CPCorner']]
 
     # open database session
     d=database.DBSession()
