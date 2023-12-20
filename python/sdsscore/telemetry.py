@@ -1,4 +1,4 @@
-olljhh
+"""
 routines for APOGEE telemetry data
    load() reads APOGEE telemetry files and load into database
    mkhtml() reads from database and makes interactive bokeh plots

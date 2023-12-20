@@ -6,6 +6,8 @@ echo " "
 
 source /uufs/chpc.utah.edu/sys/modulefiles/scripts/module_init/module_init.sh
 module load sdsscore/holtz
+module load miniconda
+module load holtztools/main
 
 #APO
 for file in `ls -t $APOGEE_TELEMETRY_N/APOGEE_PD* | head -5` 
