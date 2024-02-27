@@ -1,0 +1,24 @@
+#%yanny
+#
+# sdHdrFix-60364.par
+#
+# Created by pydl.pydlutils.yanny.yanny
+#
+# 2024-02-27 15:52:28 UTC
+#
+MJD 60364
+OBS APO
+
+typedef struct {
+    char fileroot[20];
+    char keyword[9];
+    char value[80];
+} OPHDRFIX;
+
+OPHDRFIX sdR-??-00365637 FIELDID 23447
+OPHDRFIX sdR-??-00365638 FIELDID 23447
+OPHDRFIX sdR-??-00365639 FIELDID 23447
+OPHDRFIX sdR-??-00365640 FIELDID 23447
+OPHDRFIX sdR-??-00365641 FIELDID 23447
+OPHDRFIX sdR-??-00365642 FIELDID 23447
+OPHDRFIX sdR-??-00365643 FIELDID 23447
