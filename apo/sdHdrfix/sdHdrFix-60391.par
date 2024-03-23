@@ -1,0 +1,21 @@
+#%yanny
+#
+# sdHdrFix-60391.par
+#
+# Created by pydl.pydlutils.yanny.yanny
+#
+# 2024-03-22 23:03:45 UTC
+#
+MJD 60391
+OBS APO
+
+typedef struct {
+    char fileroot[20];
+    char keyword[9];
+    char value[80];
+} OPHDRFIX;
+
+OPHDRFIX sdR-??-00366471 CONFID 13365
+OPHDRFIX sdR-??-00366471 DESIGNID 511223
+OPHDRFIX sdR-??-00366472 CONFID 13365
+OPHDRFIX sdR-??-00366472 DESIGNID 511223
