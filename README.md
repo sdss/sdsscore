@@ -1,4 +1,4 @@
-# sdsscore_test
+# sdsscore
 
 This repository contains files requires for SDSS-V operations at APO and LCO.
 
@@ -6,12 +6,12 @@ This repository contains files requires for SDSS-V operations at APO and LCO.
 
 The directories `apo/summary_files` and `lco/summary_files` contain `confSummray` and `confSummaryF` files generates at the observatories for each configuration and FVC loop respectively. The structure is `<observatory>/summary_files/NNNXXX/NNNMXX/` where summary files are grouped in directories of one hundred and those grouped in directories that contain a thousand summaries. Each thousand grouping directory (`NNNXXX`) is a submodule pointing to a different repository in the form `sdss/sdsscore_apo_summary_files_NNNXXX` (e.g., [sdsscore_apo_summary_files_015XXX](http://github.com/sdss/sdsscore_apo_summary_files_015XXX)). This structure prevents the main sdsscore repository to grow larger than the limits allowed by GitHub.
 
-### Cloning the `sdsscore_test` product
+### Cloning the `sdsscore` product
 
-`sdsscore_test` can be cloned as any other git repository git
+`sdsscore` can be cloned as any other git repository git
 
 ```console
-git clone git@github.com/sdsscore_test
+git clone git@github.com/sdsscore
 ```
 
 This will checkout the `main` branch and fetch any files that directly belong in the repository, but the summary files directories will appear empty. To initialise them do
@@ -38,7 +38,7 @@ Every now and then the `confSummary` files being generated will catch up with th
 
 - SSH to the observatory where you need to add the submodule. SSH as your own user and make sure you are forwarding an SSH key that also allows you to clone GitHub repositories.
 
-- `cd /home/sdss5/software/sdsscore_test`. Ideally you'll be adding the submodule before the previous submodule is full (in that case ignore the rest of this point), but if that's not the case [jaeger](https://github.com/sdss/jaeger), the product that creates the `confSummary` files will have continued creating summary files and adding them to `sdsscore_test`. Some, but not all of the files may have been committed directly to `sdsscore_test` instead to a submodule. **Do not remove those files** as you may lose them and with them the associated observations. Instead move the directory you want to replace with a submodule to a location outside `sdsscore_test`: `mv apo/summary_files/015XXX ~/`. Stage and commit the changes, if any, to have a clean directory tree:
+- `cd /home/sdss5/software/sdsscore/main`. Ideally you'll be adding the submodule before the previous submodule is full (in that case ignore the rest of this point), but if that's not the case [jaeger](https://github.com/sdss/jaeger), the product that creates the `confSummary` files will have continued creating summary files and adding them to `sdsscore`. Some, but not all of the files may have been committed directly to `sdsscore` instead to a submodule. **Do not remove those files** as you may lose them and with them the associated observations. Instead move the directory you want to replace with a submodule to a location outside `sdsscore`: `mv apo/summary_files/015XXX ~/`. Stage and commit the changes, if any, to have a clean directory tree:
 
     ```console
     git add .
