@@ -14,9 +14,9 @@ import astropy.time as time
 import re
 import argparse
 import pdb
-from tools import plots
+from holtztools import plots
 
-def gproc(mjd=None, observatory=None, outfile=None, plot=False, clobber=False):
+def gproc(mjd=None, observatory=None, outdir=None, outfile=None, plot=False, clobber=False):
     """Process an MJD of processed guide camera files into a single file
 
     Parameters:
@@ -48,7 +48,10 @@ def gproc(mjd=None, observatory=None, outfile=None, plot=False, clobber=False):
         gdir = os.path.join(os.getenv('GCAM_DATA_S'), str(mjd))
 
     if outfile is None: 
-        outfile=gdir+'/gcam-{mjd}.fits'.format(mjd=mjd)
+        if outdir is None :
+            outfile=gdir+'/gcam-{mjd}.fits'.format(mjd=mjd)
+        else :
+            outfile=outdir+'/gcam-{mjd}.fits'.format(mjd=mjd)
 
     if not clobber and os.path.exists(outfile) : 
         return
@@ -84,6 +87,10 @@ def gproc(mjd=None, observatory=None, outfile=None, plot=False, clobber=False):
                    ('mjd', np.dtype(np.float64)),
                    ('ra', np.dtype(np.float64)),
                    ('dec', np.dtype(np.float64)),
+                   ('az', np.dtype(np.float64)),
+                   ('alt', np.dtype(np.float64)),
+                   ('ipa', np.dtype(np.float64)),
+                   ('focus', np.dtype(np.float64)),
                    ('gdrms', np.dtype(np.float32)),
                    ('dRA', np.dtype(np.float32)),
                    ('dDec', np.dtype(np.float32)),
@@ -118,6 +125,14 @@ def gproc(mjd=None, observatory=None, outfile=None, plot=False, clobber=False):
                 gcam['gdrms'][count] = header['rms']
                 gcam['ra'][count] = header['RA']
                 gcam['dec'][count] = header['DEC']
+                try: 
+                    gcam['az'][count] = header['AZ']
+                    gcam['alt'][count] = header['ALT']
+                except :
+                    gcam['az'][count] = np.nan
+                    gcam['alt'][count] = np.nan
+                gcam['ipa'][count] = header['IPA']
+                gcam['focus'][count] = header['FOCUS']
                 gcam['dRA'][count] = header['DELTARA']
                 gcam['dDec'][count] = header['DELTADEC']
                 gcam['dRot'][count] = header['DELTAROT']
@@ -160,7 +175,9 @@ if __name__ == "__main__":
                         required=False, help="make plot")
     parser.add_argument("-o","--output", type=str,
                         required=False, help="output file name")
+    parser.add_argument("--outdir", type=str,
+                        required=False, help="output directory` name")
     parser.add_argument("-c","--clobber", action="store_true",
                         required=False, help="clobber existing file")
     args = parser.parse_args()
-    gproc(mjd=args.mjd, observatory=args.observatory, outfile=args.output, plot=args.plot, clobber=args.clobber) 
+    gproc(mjd=args.mjd, observatory=args.observatory, outfile=args.output, outdir=args.outdir, plot=args.plot, clobber=args.clobber) 
