@@ -20,7 +20,7 @@ from astropy.table import Table
 import esutil
 
 
-def getconfig(config_id=None,plugid=None,specid=1) :
+def getconfig(config_id=None,plugid=None,specid=1,obs='apo') :
     """ read confSummary or plPlugMap file, return data
     """
     if config_id is not None :
@@ -38,7 +38,11 @@ def getconfig(config_id=None,plugid=None,specid=1) :
             plug['mag'][j,2] = -1 * (-0.12879 + 0.24662 * x[j] - 0.027464 * x2[j] - 0.049465 * x3[j]) + gaia_G[j]
             plug['mag'][j,3] = -1 * (-0.29676 + 0.64728 * x[j] - 0.10141 * x2[j]) + gaia_G[j]
     elif plugid is not None :
-        plug,header=config(os.environ['MAPPER_DATA_N']+'/'+plugid.split('-')[1]+'/plPlugMapM-'+plugid+'.par',specid=specid,struct='PLUGMAPOBJ')
+        if obs == 'apo' :
+            mapper_dir=os.environ['MAPPER_DATA_N']
+        else :
+            mapper_dir=os.environ['MAPPER_DATA_S']
+        plug,header=config(mapper_dir+'/'+plugid.split('-')[1]+'/plPlugMapM-'+plugid+'.par',specid=specid,struct='PLUGMAPOBJ')
         sky=np.where(plug['objType'] == b'SKY')[0]
         stan=np.where(np.char.find(plug['objType'].astype(str),'STD') >= 0)[0]
         plug=Table(plug)
@@ -69,6 +73,8 @@ def getconfig(config_id=None,plugid=None,specid=1) :
                 plug['mag'][m1[h1[bd]],4] = corr['zmag'][h2[bd]]
         elif specid == 2 :
             plug['h_mag'][m1] = holes['STRUCT1']['tmass_h'][m2]
+        elif specid == 0 :
+            plug['mag'][m1] = holes['STRUCT1']['mag'][m2]
     else :
         raise ValueError('either config_id or plugid needs to be set')
 
@@ -123,8 +129,10 @@ def gproc(mjd=None, observatory=None, outfile=None):
         gdir = os.path.join('/data/gcam',str(mjd))
     elif observatory == 'apo':
         gdir = os.path.join(os.getenv('GCAM_DATA_N'), str(mjd))
+        aircard = 'AIRMASS'
     else:
         gdir = os.path.join(os.getenv('GCAM_DATA_S'), str(mjd))
+        aircard = 'ARMASS'
 
     files = os.listdir(gdir)
     gcam0_dtype = [('gdrms', np.dtype(np.float32)),
@@ -133,6 +141,8 @@ def gproc(mjd=None, observatory=None, outfile=None):
                    ('fwhm_mean', np.dtype(np.float32)),
                    ('indx', np.dtype(np.int32)),
                    ('date-obs', np.dtype(np.str_), 21),
+                   ('cartid', np.dtype(np.int32)),
+                   ('airmass', np.dtype(np.float32)),
                    ('mjd', np.dtype(np.float64)),
                    ('ra', np.dtype(np.float64), 17),
                    ('dec', np.dtype(np.float64), 17),
@@ -150,6 +160,7 @@ def gproc(mjd=None, observatory=None, outfile=None):
                    ('fwhm', np.dtype(np.float32), 17),
                    ('flux', np.dtype(np.float32), 17),
                    ('mag', np.dtype(np.float32), 17),
+                   ('zero', np.dtype(np.float32), 17),
                    ('sky', np.dtype(np.float32), 17),
                    ('skymag', np.dtype(np.float32), 17)]
                    
@@ -176,16 +187,20 @@ def gproc(mjd=None, observatory=None, outfile=None):
                     rescale = (3600. / np.float32(header['PLATSCAL']))
                 except:
                     rescale = 0.
+                try :
+                    gprobebits= data['grobebits']
+                except:
+                    gprobebits= 0
                 data = hdulist[6].data
                 ii = np.nonzero((data['enabled'] == True) &
-                                (data['gprobebits'] == 0) &
+                                (gprobebits == 0) &
                                 (data['dx'] == data['dx']))[0]
                 if len(ii) > 0 :
                     soff = (data['dx'][ii]**2 + data['dy'][ii]**2)
                     rms = np.sqrt(soff.mean())
                     gcam['gdrms'][count] = rms * rescale
                 ii = np.nonzero((data['enabled'] == True) &
-                                (data['gprobebits'] == 0) &
+                                (gprobebits == 0) &
                                 (data['focusOffset'] == 0.) &
                                 (data['fwhm'] == data['fwhm']))[0]
                 if len(ii) > 0 :
@@ -211,14 +226,20 @@ def gproc(mjd=None, observatory=None, outfile=None):
                 tt = time.Time(dt)
                 tt.format = 'mjd'
                 gcam['mjd'][count] = tt.value
+                gcam['cartid'][count] = header['CARTID']
+                try :gcam['airmass'][count] = header[aircard]
+                except :gcam['airmass'][count] = -1.
 
                 if header['NAME'] != oldname :
-                    plug,plugheader,sky,stan = getconfig(plugid=header['NAME'],specid=0)
+                    plug,plugheader,sky,stan = getconfig(plugid=header['NAME'],specid=0,obs=observatory)
                     guide = np.where(plug['holeType'] == b'GUIDE')[0]
                     oldname = header['NAME']
                 gcam['ra'][count,plug['fiberId'][guide]-1] = plug['ra'][guide]
                 gcam['dec'][count,plug['fiberId'][guide]-1] = plug['dec'][guide]
-
+                gcam['zero'][count,plug['fiberId'][guide]-1] = \
+                    plug['mag'][guide,2] - gcam['mag'][count,plug['fiberId'][guide]-1] 
+                #print(indx,gcam['mjd'][count],header['EXPTIME'],header['PLATETYP'],np.nanmedian(gcam['zero'][count]))
+                #print(indx,gcam['mjd'][count],header['EXPTIME'],np.nanmedian(-2.5*np.log10(gcam['flux'][count]/header['EXPTIME'])-gcam['mag'][count]))
                 count = count + 1
 
     gcam = gcam[0:count - 1]

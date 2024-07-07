@@ -4,6 +4,7 @@ import glob
 import os
 import time
 from astropy.time import Time
+import pdb
 
 def clean(observatory,mindays=60,maxdays=90) :
     """ Generate cleaning scripts for APOGEE files at APO/LCO
@@ -58,7 +59,7 @@ def clean(observatory,mindays=60,maxdays=90) :
           if rm :
             for chip in chips :
                 f_archive.write('rm /data/apogee/archive/{:s}/{:s}-{:s}-{:s}.apz\n'.format(mjd,prefix,chip,num))
-            f_raw.write('rm /data/apogee/raw/{:s}/{:s}aw-{:s}-???.fits\n'.format(mjd,prefix,num))
+            f_raw.write('rm -f /data/apogee/raw/{:s}/{:s}aw-{:s}-???.fits\n'.format(mjd,prefix,num))
             f_ics.write('rm /data/{:s}/{:s}aw-{:s}-???.fits\n'.format(num[0:4],prefix,num))
             f_ics.write('rm /summary/{:s}/{:s}aw-{:s}.fits\n'.format(num[0:4],prefix,num))
 
@@ -69,5 +70,5 @@ def clean(observatory,mindays=60,maxdays=90) :
 if __name__ == "__main__" :
 
     print('apo')
-    clean('apo')
-    clean('lco',mindays=45)
+    clean('apo',mindays=30)
+    clean('lco',mindays=25)
