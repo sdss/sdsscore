@@ -17,6 +17,8 @@ def clean(observatory,mindays=60,maxdays=90) :
     os.chmod('{:s}_clean_raw'.format(observatory),0o755)
     f_archive=open('{:s}_clean_archive'.format(observatory),'w')
     os.chmod('{:s}_clean_archive'.format(observatory),0o755)
+    f_utr=open('{:s}_clean_utr'.format(observatory),'w')
+    os.chmod('{:s}_clean_utr'.format(observatory),0o755)
     f_ics=open('{:s}_clean_ics'.format(observatory),'w')
     os.chmod('{:s}_clean_ics'.format(observatory),0o755)
 
@@ -60,11 +62,13 @@ def clean(observatory,mindays=60,maxdays=90) :
             for chip in chips :
                 f_archive.write('rm /data/apogee/archive/{:s}/{:s}-{:s}-{:s}.apz\n'.format(mjd,prefix,chip,num))
             f_raw.write('rm -f /data/apogee/raw/{:s}/{:s}aw-{:s}-???.fits\n'.format(mjd,prefix,num))
+            f_utr.write('rm -f /data/apogee/utr_cdr/{:s}/{:s}aw-{:s}.fits\n'.format(mjd,prefix,num))
             f_ics.write('rm /data/{:s}/{:s}aw-{:s}-???.fits\n'.format(num[0:4],prefix,num))
             f_ics.write('rm /summary/{:s}/{:s}aw-{:s}.fits\n'.format(num[0:4],prefix,num))
 
     f_archive.close()
     f_raw.close()
+    f_utr.close()
     f_ics.close()
 
 if __name__ == "__main__" :
