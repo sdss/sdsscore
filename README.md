@@ -89,11 +89,11 @@ Every now and then the `confSummary` files being generated will catch up with th
     nothing to commit, working tree clean
     ```
 
-    You can return the same `bash /home/sdss5/config/cronjobs/sdsscore.sh` and now it should complete without warnings.
+    You can rerun the same `bash /home/sdss5/config/cronjobs/sdsscore.sh` and now it should complete without warnings.
 
 - Now SSH to Utah and become the `sdssunit` user with `sudo su - sdssunit` (you need to belong to the group of users allowed to become `sdssunit`).
 
-- Run `module load sdsscore/test` and `cd $SDSSCORE_DIR`.
+- Run `module load sdsscore` and `cd $SDSSCORE_DIR`.
 
 - Run `git pull`, which should update `.gitmodules` and add the new submodule. Initialise the submodule with `git submodule init`. Now `cd` to the new submodule directory (`cd apo/summary_files/015XXX`) and run `git status`. If the submodule is not tracking the `main` branch (e.g. it's detached) do `git checkout main`.
 
