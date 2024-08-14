@@ -1,0 +1,19 @@
+line-length = 88
+target-version = 'py312'
+exclude = ["typings/"]
+
+[lint]
+select = ["E", "F", "I"]
+unfixable = ["F841"]
+
+[lint.per-file-ignores]
+"__init__.py" = ["F401", "F403", "E402"]
+
+[lint.isort]
+known-first-party = ["jaeger"]
+lines-after-imports = 2
+section-order = ["future", "standard-library", "typing", "third-party", "sdss", "first-party", "local-folder"]
+
+[lint.isort.sections]
+typing = ["typing"]
+sdss = ["sdsstools", "target_selection", "sdssdb"]
