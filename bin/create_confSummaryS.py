@@ -185,7 +185,7 @@ def process_file(
         except Exception as ee:
             log.error(f"Error validating skies in {path.name}: {ee}")
             log.warning(f"A copy of {path.name} will be used as confSummaryS.")
-            mask = numpy.array([])
+            mask = numpy.zeros(coords.shape[0], dtype=bool)
     else:
         log.warning(f"No unassigned APOGEE fibers in {path.name}.")
         mask = numpy.array([])
