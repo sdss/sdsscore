@@ -34,7 +34,32 @@ ROOT_DIR = pathlib.Path(__file__).parents[1]
 # List of directories to skip. The path is relative to the root directory.
 # Add paths here once all the files in that directory have been processed to
 # speed up the process.
-SKIP_DIRECTORIES: list[str] = []
+SKIP_DIRECTORIES: list[str] = [
+    "apo/summary_files/000XXX",
+    "apo/summary_files/001XXX",
+    "apo/summary_files/002XXX",
+    "apo/summary_files/003XXX",
+    "apo/summary_files/004XXX",
+    "apo/summary_files/005XXX",
+    "apo/summary_files/006XXX",
+    "apo/summary_files/007XXX",
+    "apo/summary_files/008XXX",
+    "apo/summary_files/009XXX",
+    "apo/summary_files/010XXX",
+    "apo/summary_files/011XXX",
+    "apo/summary_files/012XXX",
+    "apo/summary_files/013XXX",
+    "apo/summary_files/014XXX",
+    "lco/summary_files/10000XXX"
+    "lco/summary_files/10001XXX"
+    "lco/summary_files/10002XXX"
+    "lco/summary_files/10003XXX"
+    "lco/summary_files/10004XXX"
+    "lco/summary_files/10005XXX"
+    "lco/summary_files/10006XXX"
+    "lco/summary_files/10007XXX"
+    "lco/summary_files/10008XXX",
+]
 
 # List of catalogues against which to validate the sky coordinates.
 CATALOGUES: list[str] = ["gaia_dr3_source", "twomass_psc", "tycho2", "twomass_xsc"]
