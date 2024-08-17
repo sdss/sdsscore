@@ -172,7 +172,6 @@ def process_file(
         polars.col.dec > -999,
     )
     coords = unassigned.select(["ra", "dec"]).to_numpy()
-    print(coords)
 
     # Get the skies mask.
     if coords.size > 0:
