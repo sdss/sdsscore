@@ -40,7 +40,7 @@ SKIP_DIRECTORIES: list[str] = []
 CATALOGUES: list[str] = ["gaia_dr3_source", "twomass_psc", "tycho2", "twomass_xsc"]
 
 # Name of the fake carton to assign to valid skies.
-CARTON: str = "ops_sky_apogee_best"
+CARTON: str = "ops_sky_apogee_best_unassigned"
 
 # Connection URI.
 DATABASE_URI: str = "postgresql://sdss_user@operations.sdss.org/sdss5db"
