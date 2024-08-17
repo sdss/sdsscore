@@ -270,7 +270,6 @@ def process_summaries(
 
     log.info("Retrieving list of new confSummary files to process.")
     new_files = sorted(get_new_files())
-    new_files = new_files[-100:]
 
     n_new = len(new_files)
 
@@ -294,3 +293,7 @@ def process_summaries(
 
     with multiprocessing.Pool(n_cpus) as pool:
         pool.map(partial_func, new_files)
+
+
+if __name__ == "__main__":
+    process_summaries(verbose=True)
