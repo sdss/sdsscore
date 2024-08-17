@@ -167,18 +167,24 @@ def process_file(
         polars.col.assigned == 0,
         polars.col.on_target == 0,
         polars.col.fiberType == "APOGEE",
+        polars.col.fiberId > 0,
         polars.col.ra >= 0,
         polars.col.dec > -999,
     )
     coords = unassigned.select(["ra", "dec"]).to_numpy()
+    print(coords)
 
     # Get the skies mask.
-    mask = is_valid_sky(
-        coords,
-        database_uri,
-        catalogues=CATALOGUES,
-        epoch=header["epoch"],
-    )
+    if coords.size > 0:
+        mask = is_valid_sky(
+            coords,
+            database_uri,
+            catalogues=CATALOGUES,
+            epoch=header["epoch"],
+        )
+    else:
+        log.warning(f"No unassigned APOGEE fibers in {path.name}.")
+        mask = numpy.array([])
 
     # Limit unassigned to the columns we care about and replace the program
     # and category columns for valid skies.
