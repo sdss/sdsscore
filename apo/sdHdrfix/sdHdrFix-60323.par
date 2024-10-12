@@ -4,10 +4,10 @@
 #
 # Created by pydl.pydlutils.yanny.yanny
 #
-# 2024-10-11 15:13:10 UTC
+# 2024-10-12 04:33:03 UTC
 #
-MJD 60323   # Modified Julian Date for sdHdrFix file
-OBS APO     # Observatory
+MJD 60323
+OBS APO
 
 typedef struct {
     char fileroot[20];
@@ -15,4 +15,4 @@ typedef struct {
     char value[80];
 } OPHDRFIX;
 
-OPHDRFIX sdR-??-00363929 QUALITY bad
+OPHDRFIX sdR-??-00363926 QUALITY bad
