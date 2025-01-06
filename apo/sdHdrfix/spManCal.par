@@ -1,0 +1,24 @@
+#%yanny
+#
+# spManCal.par
+#
+# Created by pydl.pydlutils.yanny.yanny
+#
+# 2025-01-02 21:58:20 UTC
+#
+MJD 60232   # Modified Julian Date of latest edit
+OBS apo     # Observatory
+
+typedef struct {
+    char type[4];
+    char field[7];
+    long mjd;
+    long expid;
+} OPMANCAL;
+
+OPMANCAL arc 100499 59797 -999
+OPMANCAL arc 103421 59953 -999
+OPMANCAL arc 101854 60323 -999
+OPMANCAL arc 101741 60662 -999
+OPMANCAL flat 102320 60676 378967
+
