@@ -6,7 +6,7 @@
 #
 # 2025-01-02 21:58:20 UTC
 #
-MJD 60232   # Modified Julian Date of latest edit
+MJD 60683   # Modified Julian Date of latest edit
 OBS apo     # Observatory
 
 typedef struct {
@@ -21,4 +21,5 @@ OPMANCAL arc 103421 59953 -999
 OPMANCAL arc 101854 60323 -999
 OPMANCAL arc 101741 60662 -999
 OPMANCAL flat 102320 60676 378967
+OPMANCAL flat 100320 60680 379193
 
