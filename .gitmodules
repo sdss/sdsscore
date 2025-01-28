@@ -94,3 +94,6 @@
 [submodule "lco/summary_files/10012XXX"]
 	path = lco/summary_files/10012XXX
 	url = git@github.com:sdss/sdsscore_lco_summary_files_10012XXX.git
+[submodule "apo/too_targets"]
+	path = apo/too_targets
+	url = git@github.com:sdss/sdsscore_apo_too_targets.git
