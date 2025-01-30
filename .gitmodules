@@ -97,3 +97,6 @@
 [submodule "apo/too_targets"]
 	path = apo/too_targets
 	url = git@github.com:sdss/sdsscore_apo_too_targets.git
+[submodule "lco/too_targets"]
+	path = lco/too_targets
+	url = git@github.com:sdss/sdsscore_lco_too_targets.git
