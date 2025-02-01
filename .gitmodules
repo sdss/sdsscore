@@ -121,3 +121,21 @@
 [submodule "apo/summary_files/025XXX"]
 	path = apo/summary_files/025XXX
 	url = git@github.com:sdss/sdsscore_apo_summary_files_025XXX.git
+[submodule "lco/summary_files/10013XXX"]
+	path = lco/summary_files/10013XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10013XXX.git
+[submodule "lco/summary_files/10014XXX"]
+	path = lco/summary_files/10014XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10014XXX.git
+[submodule "lco/summary_files/10015XXX"]
+	path = lco/summary_files/10015XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10015XXX.git
+[submodule "lco/summary_files/10016XXX"]
+	path = lco/summary_files/10016XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10016XXX.git
+[submodule "lco/summary_files/10017XXX"]
+	path = lco/summary_files/10017XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10017XXX.git
+[submodule "lco/summary_files/10018XXX"]
+	path = lco/summary_files/10018XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10018XXX.git
