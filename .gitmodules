@@ -100,3 +100,24 @@
 [submodule "lco/too_targets"]
 	path = lco/too_targets
 	url = git@github.com:sdss/sdsscore_lco_too_targets.git
+[submodule "apo/summary_files/019XXX"]
+	path = apo/summary_files/019XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_019XXX.git
+[submodule "apo/summary_files/020XXX"]
+	path = apo/summary_files/020XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_020XXX.git
+[submodule "apo/summary_files/021XXX"]
+	path = apo/summary_files/021XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_021XXX.git
+[submodule "apo/summary_files/022XXX"]
+	path = apo/summary_files/022XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_022XXX.git
+[submodule "apo/summary_files/023XXX"]
+	path = apo/summary_files/023XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_023XXX.git
+[submodule "apo/summary_files/024XXX"]
+	path = apo/summary_files/024XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_024XXX.git
+[submodule "apo/summary_files/025XXX"]
+	path = apo/summary_files/025XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_025XXX.git
