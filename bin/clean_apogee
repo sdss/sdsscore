@@ -78,4 +78,5 @@ if __name__ == "__main__" :
 
     print('apo')
     clean('apo',mindays=30)
+    print('lco')
     clean('lco',mindays=25)
