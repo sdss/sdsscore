@@ -38,7 +38,10 @@ def clean(observatory,mindays=60,maxdays=90) :
     chips=['a','b','c']
     for dir in dirs :
       mjd=os.path.basename(dir)
-      dt=now-os.path.getmtime(dir)
+      try :
+          dt=now-os.path.getmtime(dir)
+      except :
+          continue
       # consider directorires more than mindays days old and less than maxdays
       if dt > mindays*86400. and dt < maxdays*86400 :
         print('checking ',mjd)
