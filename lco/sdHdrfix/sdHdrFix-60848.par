@@ -1,0 +1,18 @@
+#%yanny
+#
+# sdHdrFix-60848.par
+#
+# Created by pydl.pydlutils.yanny.yanny
+#
+# 2025-08-06 15:00:51 UTC
+#
+MJD 60848   # Modified Julian Date for sdHdrFix file
+OBS LCO     # Observatory
+
+typedef struct {
+    char fileroot[20];
+    char keyword[9];
+    char value[80];
+} OPHDRFIX;
+
+OPHDRFIX sdR-??-00055317 QUALITY bad
