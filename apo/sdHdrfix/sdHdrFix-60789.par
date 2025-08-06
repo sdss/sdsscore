@@ -4,7 +4,7 @@
 #
 # Created by pydl.pydlutils.yanny.yanny
 #
-# 2025-04-24 15:00:45 UTC
+# 2025-08-06 14:14:53 UTC
 #
 MJD 60789
 OBS APO
@@ -15,5 +15,6 @@ typedef struct {
     char value[80];
 } OPHDRFIX;
 
+OPHDRFIX sdR-??-00384671 QUALITY bad
 OPHDRFIX sdR-??-00384683 QUALITY bad
 OPHDRFIX sdR-??-00384726 QUALITY bad
