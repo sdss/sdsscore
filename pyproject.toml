@@ -1,0 +1,36 @@
+[project]
+name = "sdsscore"
+version = "0.1.0"
+description = "Bookkeeping and operations files for SDSS observations"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "astropy>=6.1.7",
+    "astroquery>=0.4.10",
+    "esutil>=0.6.16",
+    "numpy>1,<2",
+    "polars>=1.32.2",
+    "psycopg2-binary>=2.9.10",
+    "pydl>=1.0.1",
+    "sdss-target-selection>=1.4.3",
+    "sdsstools>=1.9.1",
+    "typer>=0.16.0",
+]
+
+[project.scripts]
+sdsscore = "sdsscore.__main__:app"
+
+[dependency-groups]
+dev = [
+    "ipdb>=0.13.13",
+    "ipython>=8.0.0",
+    "ruff>=0.12.8",
+]
+
+[build-system]
+requires = ["uv_build>=0.8.9,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "sdsscore"
+module-root = "python"

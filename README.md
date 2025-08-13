@@ -1,6 +1,6 @@
 # sdsscore
 
-This repository contains files requires for SDSS-V operations at APO and LCO.
+This repository contains files required for SDSS-V operations at APO and LCO.
 
 ## Summary files
 
