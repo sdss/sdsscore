@@ -29,7 +29,7 @@ if TYPE_CHECKING:
     pass
 
 
-ROOT_DIR = pathlib.Path(__file__).parents[1]
+ROOT_DIR = pathlib.Path(__file__).parents[2]
 
 # List of directories to skip. The path is relative to the root directory.
 # Add paths here once all the files in that directory have been processed to
