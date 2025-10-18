@@ -12,7 +12,7 @@ dependencies = [
     "polars>=1.32.2",
     "psycopg2-binary>=2.9.10",
     "pydl>=1.0.1",
-    "sdss-target-selection>=1.4.3",
+    "sdss-target-selection>=1.4.4",
     "sdsstools>=1.9.1",
     "typer>=0.16.0",
 ]
@@ -26,6 +26,27 @@ dev = [
     "ipython>=8.0.0",
     "ruff>=0.12.8",
 ]
+
+[tool.ruff]
+line-length = 88
+target-version = 'py312'
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+unfixable = ["F841"]
+exclude = ["typings/"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F403", "E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["sdsscore"]
+lines-after-imports = 2
+section-order = ["future", "standard-library", "typing", "third-party", "sdss", "first-party", "local-folder"]
+
+[tool.ruff.lint.isort.sections]
+typing = ["typing"]
+sdss = ["sdsstools", "sdssdb", "target_selection"]
 
 [build-system]
 requires = ["uv_build>=0.8.9,<0.9.0"]

@@ -12,6 +12,7 @@ import logging
 import multiprocessing
 import os
 import pathlib
+import re
 from functools import partial
 
 from typing import TYPE_CHECKING
@@ -19,6 +20,7 @@ from typing import TYPE_CHECKING
 import numpy
 import polars
 from astropy.table import Table
+from rich.progress import track
 
 from sdsstools._vendor.yanny import write_ndarray_to_yanny, yanny
 from sdsstools.logger import get_logger
@@ -271,9 +273,9 @@ def process_summaries(
     n_cpus
         The number of CPUs to use for parallel processing.
     verbose
-        If `True`, will print progress information.
+        If :obj:`True`, will print progress information.
     create_parquet
-        If `True`, will create a parquet file for each ``confSummaryS`` file.
+        If :obj:`True`, will create a parquet file for each ``confSummaryS`` file.
 
     """
 
@@ -305,6 +307,67 @@ def process_summaries(
 
     with multiprocessing.Pool(n_cpus) as pool:
         pool.map(partial_func, new_files)
+
+
+def get_full_summary_path(file: str) -> pathlib.Path:
+    """Returns the full path to a summary file given its basename."""
+
+    SDSSCORE_DIR = os.getenv("SDSSCORE_DIR", None)
+    if SDSSCORE_DIR is None:
+        raise RuntimeError("SDSSCORE_DIR environment variable is not set.")
+
+    if file.startswith("apo/summary_files/") or file.startswith("lco/summary_files/"):
+        return (pathlib.Path(SDSSCORE_DIR) / file).absolute()
+
+    match = re.search(r"(confSummary[F|S]*)-(\d+).par", file)
+    if not match:
+        raise ValueError(f"Cannot parse summary file name from {file}")
+
+    flavour = match.group(1)
+    conf_id = int(match.group(2))
+
+    obs = "lco" if conf_id >= 1000000 else "apo"
+
+    conf_xxx = (f"{conf_id:06d}")[0:-3] + "XXX"
+    conf_xx = (f"{conf_id:06d}")[0:-2] + "XX"
+
+    path = pathlib.Path(SDSSCORE_DIR) / obs / "summary_files" / conf_xxx / conf_xx
+    file_path = path / f"{flavour}-{conf_id}.par"
+
+    if not path.exists() or not file_path.exists():
+        raise FileNotFoundError(f"Summary file {file_path} does not exist.")
+
+    return file_path.absolute()
+
+
+def rerun_summary_files(
+    file_: str,
+    database_uri: str = DATABASE_URI,
+    create_parquet: bool = True,
+):
+    """Reruns the process to generate confSummary*S files.
+
+    Parameters
+    ----------
+    file
+        A file with a list of summary files paths to return. The paths can be relative
+        to the `$SDSSCORE_DIR` or just the basename of the summary files.
+    database_uri
+        The database URI to use for the sky queries.
+    create_parquet
+        If :obj:`True`, will create a parquet file for each ``confSummaryS`` file.
+
+    """
+
+    files = map(get_full_summary_path, sorted(open(file_).read().splitlines()))
+
+    for path in track(list(files), description="Rerunning summary files..."):
+        process_file(
+            path,
+            database_uri=database_uri,
+            overwrite=True,
+            create_parquet=create_parquet,
+        )
 
 
 if __name__ == "__main__":
