@@ -56,6 +56,8 @@ SKIP_DIRECTORIES: list[str] = [
     "apo/summary_files/016XXX",
     "apo/summary_files/017XXX",
     "apo/summary_files/018XXX",
+    "apo/summary_files/019XXX",
+    "apo/summary_files/020XXX",
     "lco/summary_files/10000XXX"
     "lco/summary_files/10001XXX"
     "lco/summary_files/10002XXX"
@@ -69,6 +71,10 @@ SKIP_DIRECTORIES: list[str] = [
     "lco/summary_files/10010XXX",
     "lco/summary_files/10011XXX",
     "lco/summary_files/10012XXX",
+    "lco/summary_files/10013XXX",
+    "lco/summary_files/10014XXX",
+    "lco/summary_files/10015XXX",
+    "lco/summary_files/10016XXX",
 ]
 
 # List of catalogues against which to validate the sky coordinates.
