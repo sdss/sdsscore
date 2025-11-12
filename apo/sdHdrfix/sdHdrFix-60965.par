@@ -1,0 +1,18 @@
+#%yanny
+#
+# sdHdrFix-60965.par
+#
+# Created by pydl.pydlutils.yanny.yanny
+#
+# 2025-11-12 21:40:31 UTC
+#
+MJD 60965
+OBS APO
+
+typedef struct {
+    char fileroot[20];
+    char keyword[9];
+    char value[80];
+} OPHDRFIX;
+
+OPHDRFIX sdR-??-00388524 EXPTIME 20.0
