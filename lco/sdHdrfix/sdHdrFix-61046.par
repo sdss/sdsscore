@@ -1,0 +1,24 @@
+#%yanny
+#
+# sdHdrFix-61046.par
+#
+# Created by pydl.pydlutils.yanny.yanny
+#
+# 2026-01-07 18:16:58 UTC
+#
+MJD 61046
+OBS LCO
+
+typedef struct {
+    char fileroot[20];
+    char keyword[9];
+    char value[80];
+} OPHDRFIX;
+
+OPHDRFIX sdR-??-00065995 QUALITY test
+OPHDRFIX sdR-??-00065996 QUALITY test
+OPHDRFIX sdR-??-00065997 QUALITY test
+OPHDRFIX sdR-??-00065998 QUALITY test
+OPHDRFIX sdR-??-00065999 QUALITY test
+OPHDRFIX sdR-??-00066000 QUALITY test
+OPHDRFIX sdR-??-00066001 QUALITY test
