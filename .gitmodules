@@ -139,3 +139,18 @@
 [submodule "lco/summary_files/10018XXX"]
 	path = lco/summary_files/10018XXX
 	url = git@github.com:sdss/sdsscore_lco_summary_files_10018XXX.git
+[submodule "lco/summary_files/10019XXX"]
+	path = lco/summary_files/10019XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10019XXX.git
+[submodule "lco/summary_files/10020XXX"]
+	path = lco/summary_files/10020XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10020XXX.git
+[submodule "lco/summary_files/10021XXX"]
+	path = lco/summary_files/10021XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10021XXX.git
+[submodule "lco/summary_files/10022XXX"]
+	path = lco/summary_files/10022XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10022XXX.git
+[submodule "lco/summary_files/10023XXX"]
+	path = lco/summary_files/10023XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10023XXX.git
