@@ -1,0 +1,20 @@
+#%yanny
+#
+# sdHdrFix-61056.par
+#
+# Created by pydl.pydlutils.yanny.yanny
+#
+# 2026-01-16 16:45:50 UTC
+#
+MJD 61056   # Modified Julian Date for sdHdrFix file
+OBS APO     # Observatory
+
+typedef struct {
+    char fileroot[20];
+    char keyword[9];
+    char value[80];
+} OPHDRFIX;
+
+OPHDRFIX sdR-??-00394695 CONFID 24138
+OPHDRFIX sdR-??-00394695 DESIGNID 753411
+OPHDRFIX sdR-??-00394695 FIELDID 101213
