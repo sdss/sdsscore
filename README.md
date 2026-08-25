@@ -34,7 +34,7 @@ In general, refer to the [submodules](https://www.git-scm.com/book/en/v2/Git-Too
 
 Every now and then the `confSummary` files being generated will catch up with the available `summary_files` submodules. If you need to add a new submodule, follow the following steps:
 
-- Create a [new repository](https://github.com/new) in the SDSS organisation with name `sdsscore_OBS_summary_files_NNNXXX` (e.g., `sdsscore_apo_summary_files_015XXX`). Make sure you select the option to add a README file so that the resulting repository has a `main` branch. (We'll use `sdsscore_apo_summary_files_015XXX` as the example for the rest of these instructions).
+- Create a [new repository](https://github.com/new) in the SDSS organisation with name `sdsscore_OBS_summary_files_NNNXXX` (e.g., `sdsscore_apo_summary_files_015XXX`). Make sure you select the option to add a README file so that the resulting repository has a `main` branch. (We'll use `sdsscore_apo_summary_files_015XXX` as the example for the rest of these instructions). Using the [GitHub CLI](https://cli.github.com) you can do this with `gh repo create --public --add-readme sdss/sdsscore_apo_summary_files_015XXX`.
 
 - SSH to the observatory where you need to add the submodule. SSH as your own user and make sure you are forwarding an SSH key that also allows you to clone GitHub repositories.
 
