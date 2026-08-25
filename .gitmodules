@@ -160,3 +160,45 @@
 [submodule "apo/summary_files/027XXX"]
 	path = apo/summary_files/027XXX
 	url = git@github.com:sdss/sdsscore_apo_summary_files_027XXX.git
+[submodule "apo/summary_files/028XXX"]
+	path = apo/summary_files/028XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_028XXX
+[submodule "apo/summary_files/030XXX"]
+	path = apo/summary_files/030XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_030XXX
+[submodule "apo/summary_files/029XXX"]
+	path = apo/summary_files/029XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_029XXX
+[submodule "apo/summary_files/031XXX"]
+	path = apo/summary_files/031XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_031XXX
+[submodule "apo/summary_files/032XXX"]
+	path = apo/summary_files/032XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_032XXX
+[submodule "apo/summary_files/033XXX"]
+	path = apo/summary_files/033XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_033XXX
+[submodule "apo/summary_files/034XXX"]
+	path = apo/summary_files/034XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_034XXX
+[submodule "apo/summary_files/035XXX"]
+	path = apo/summary_files/035XXX
+	url = git@github.com:sdss/sdsscore_apo_summary_files_035XXX
+[submodule "lco/summary_files/10024XXX"]
+	path = lco/summary_files/10024XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10024XXX
+[submodule "lco/summary_files/10025XXX"]
+	path = lco/summary_files/10025XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10025XXX
+[submodule "lco/summary_files/10026XXX"]
+	path = lco/summary_files/10026XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10026XXX
+[submodule "lco/summary_files/10027XXX"]
+	path = lco/summary_files/10027XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10027XXX
+[submodule "lco/summary_files/10028XXX"]
+	path = lco/summary_files/10028XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10028XXX
+[submodule "lco/summary_files/10029XXX"]
+	path = lco/summary_files/10029XXX
+	url = git@github.com:sdss/sdsscore_lco_summary_files_10029XXX
