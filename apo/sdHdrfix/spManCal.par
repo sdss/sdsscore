@@ -4,9 +4,9 @@
 #
 # Created by pydl.pydlutils.yanny.yanny
 #
-# 2025-03-13 16:01:30 UTC
+# 2026-09-18 14:51:05 UTC
 #
-MJD 60747   # Modified Julian Date of latest edit
+MJD 61301   # Modified Julian Date of latest edit
 OBS apo     # Observatory
 
 typedef struct {
@@ -28,7 +28,8 @@ OPMANCAL arc 100169 60535 -999
 OPMANCAL arc 101741 60662 -999
 OPMANCAL flat 102320 60676 378967
 OPMANCAL flat 100320 60680 379193
-OPMANCAL arc 102317 60727 -999
-OPMANCAL arc 102556 60727 -999
+OPMANCAL flat 100372 60687 379544
 OPMANCAL arc 103171 60727 -999
 OPMANCAL arc 103181 60727 -999
+OPMANCAL arc 102556 60727 -999
+OPMANCAL arc 102317 60727 -999
