@@ -1,12 +1,12 @@
 #%yanny
 #
-# sdHdrFix-60848.par
+# sdHdrFix-60746.par
 #
 # Created by pydl.pydlutils.yanny.yanny
 #
-# 2026-09-18 19:11:11 UTC
+# 2026-09-18 18:50:52 UTC
 #
-MJD 60848
+MJD 60746
 OBS LCO
 
 typedef struct {
@@ -15,4 +15,5 @@ typedef struct {
     char value[80];
 } OPHDRFIX;
 
-OPHDRFIX sdR-??-00055317 QUALITY bad
+OPHDRFIX sdR-??-00048953 QUALITY bad
+OPHDRFIX sdR-??-00048955 QUALITY bad
