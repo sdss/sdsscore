@@ -16,4 +16,3 @@ typedef struct {
 } OPHDRFIX;
 
 OPHDRFIX sdR-??-00047672 QUALITY bad
-OPHDRFIX sdR-??-10012397 QUALITY bad
